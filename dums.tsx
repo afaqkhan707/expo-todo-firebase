@@ -1,8 +1,7 @@
-import {Stack, useRouter, useSegments } from "expo-router";
-import { useEffect, useState } from "react";
+import { Stack, useRouter, useSegments } from 'expo-router';
+import { useEffect, useState } from 'react';
 import auth, { FirebaseAuthTypes } from '@react-native-firebase/auth';
-import { ActivityIndicator, View } from "react-native";
-
+import { View, ActivityIndicator } from 'react-native';
 
 export default function RootLayout() {
   const [initializing, setInitializing] = useState(true);
@@ -23,14 +22,15 @@ export default function RootLayout() {
 
   useEffect(() => {
     if (initializing) return;
+
     const inAuthGroup = segments[0] === '(auth)';
-    if (user && inAuthGroup) {
-      router.replace('/(drawer)/(tabs)/home');
-    } else if (!user && !inAuthGroup) {
-      router.replace('/(auth)/Login');
+
+    if (user && !inAuthGroup) {
+      router.replace('/(auth)/home');
+    } else if (!user && inAuthGroup) {
+      router.replace('/');
     }
-  }, [user, initializing, segments]); 
-  
+  }, [user, initializing]);
 
   if (initializing)
     return (
@@ -46,9 +46,8 @@ export default function RootLayout() {
 
   return (
     <Stack>
-      <Stack.Screen name="(auth)" options={{headerShown: false}}/>
-      <Stack.Screen name="index" />
-      <Stack.Screen name="(drawer)" options={{headerShown: false}}/>
+      <Stack.Screen name="index" options={{ title: 'Login' }} />
+      <Stack.Screen name="(auth)" options={{ headerShown: false }} />
     </Stack>
   );
 }
